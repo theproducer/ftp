@@ -1,0 +1,16 @@
+# See https://atom.io/docs/latest/creating-a-package#menus for more details
+'context-menu':
+  '.overlayer':
+      'Enable ftp': 'ftp:toggle'
+
+'menu': [
+  {
+    'label': 'Packages'
+    'submenu': [
+      'label': 'ftp'
+      'submenu': [
+        { 'label': 'Toggle', 'command': 'ftp:toggle' }
+      ]
+    ]
+  }
+]
