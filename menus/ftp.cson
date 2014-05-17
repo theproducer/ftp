@@ -1,15 +1,19 @@
 # See https://atom.io/docs/latest/creating-a-package#menus for more details
 'context-menu':
-  '.overlayer':
-      'Enable ftp': 'ftp:toggle'
+  '.tree-view':
+      'Upload Directory': 'ftp:uploaddirectory'
+
+  '.file':
+      'Upload File': 'ftp:uploadfile'
+      'Watch File': 'ftp:watchfile'
 
 'menu': [
   {
     'label': 'Packages'
     'submenu': [
-      'label': 'ftp'
+      'label': 'FTP'
       'submenu': [
-        { 'label': 'Toggle', 'command': 'ftp:toggle' }
+        { 'label': 'Project Settings', 'command': 'ftp:settings' }
       ]
     ]
   }

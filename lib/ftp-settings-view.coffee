@@ -31,6 +31,11 @@ class FtpSettingsView extends View
                 @label for: "uploadonsave", =>
                     @span "Upload on Save"
 
+            @div class: 'formrow editor-container native-key-bindings', =>
+                @input type: 'checkbox',  name: "uploadonchange", id:"uploadonchange"
+                @label for: "uploadonchange", =>
+                    @span "Upload on Change"
+
             @div class: 'formrow submit btn-group', =>
                 @input id: 'ftpsettings_close', value: 'Cancel', class: 'btn'
                 @input id: 'ftpsettings_save', value: 'Save', class: 'btn btn-primary'
@@ -56,6 +61,11 @@ class FtpSettingsView extends View
                 $("input#uploadonsave").attr "checked", true
             else
                 $("input#uploadonsave").prop "checked", false
+
+            if @ftpdetails.uploadonchange
+                $("input#uploadonchange").attr "checked", true
+            else
+                $("input#uploadonchange").prop "checked", false
         else
             @ftpdetails =
                 server: ''
@@ -64,6 +74,7 @@ class FtpSettingsView extends View
                 port: 21
                 remotepath: ''
                 uploadonsave: false
+                uploadonchange: false
             settingsFile.write JSON.stringify(@ftpdetails);
 
         $(document).on('click', '#ftpsettings_save', ( =>
@@ -79,17 +90,23 @@ class FtpSettingsView extends View
     serialize: ->
 
     save: ->
-        @ftpdetails =
-            server: $("input#server").val()
-            username: $("input#username").val()
-            password: $("input#password").val()
-            port: $("input#port").val()
-            remotepath: $("input#remotepath").val()
-            uploadonsave: $("input#uploadonsave").is(":checked")
-
         currentProject = atom.project
-
         CSON = require 'season'
+
+        settingsFile = new File(currentProject.getPath() + "/ftp.json");
+
+        if settingsFile.exists()
+            @ftpdetails = CSON.readFileSync currentProject.getPath() + "/ftp.json"
+
+            @ftpdetails.server = $("input#server").val()
+            @ftpdetails.username = $("input#username").val()
+            @ftpdetails.password = $("input#password").val()
+            @ftpdetails.port = $("input#port").val()
+            @ftpdetails.remotepath = $("input#remotepath").val()
+            @ftpdetails.uploadonsave = $("input#uploadonsave").is(":checked")
+            @ftpdetails.uploadonchange = $("input#uploadonchange").is(":checked")
+
+
         CSON.writeFileSync currentProject.getPath() + "/ftp.json", @ftpdetails
 
         @detach()
