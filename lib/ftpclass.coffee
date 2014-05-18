@@ -6,6 +6,7 @@ jsftp = require 'jsftp'
 {Subscriber} = require 'emissary'
 
 FtpSettingsView = require "./ftp-settings-view"
+FtpStatusView = require "./ftp-status-view"
 
 module.exports =
 class Ftp
@@ -76,7 +77,7 @@ class Ftp
             ftpdetails = CSON.readFileSync currentProject.getPath() + "/ftp.json"
             if ftpdetails.watchedfiles is null
                 ftpdetails.watchedfiles = []
-                
+
             ftpdetails.watchedfiles.push filepath
 
             settingsFile.write JSON.stringify(ftpdetails);
@@ -118,6 +119,9 @@ class Ftp
         if settingsFile.exists()
             ftpdetails = CSON.readFileSync currentProject.getPath() + "/ftp.json"
 
+            statusView = new FtpStatusView()
+            statusView.addToStatusBar("Uploading file...")
+
             client = new jsftp(
                 host: ftpdetails.server
                 user: ftpdetails.username
@@ -157,12 +161,16 @@ class Ftp
                     client.getPutSocket pathArrayString + "/" + filetoupload.getBaseName(), (err, socket) ->
                         if err
                             console.error err
+                            statusView.addToStatusBar("Upload Error")
+                            statusView.removeFromMessageBar()
                             client.raw.quit()
                         else
                             streamData.pipe(socket)
                             streamData.resume()
                             client.raw.quit();
+                            statusView.addToStatusBar("Upload Successful")
                             console.log "upload sucessful"
+                            statusView.removeFromMessageBar()
 
 
     handleEvents: (editor) ->
