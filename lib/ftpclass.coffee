@@ -69,8 +69,11 @@ class Ftp
 
     markfileaswatched: ->
         filepath = atom.workspaceView.find('.tree-view .selected')?.view()?.getPath?()
+        fileobj = new File(filepath)
         currentProject = atom.project
         CSON = require 'season'
+
+        statusView = new FtpStatusView()
 
         settingsFile = new File(currentProject.getPath() + "/ftp.json")
         if settingsFile.exists()
@@ -78,9 +81,17 @@ class Ftp
             if ftpdetails.watchedfiles is null
                 ftpdetails.watchedfiles = []
 
-            ftpdetails.watchedfiles.push filepath
+            if ftpdetails.watchedfiles.indexOf(filepath) is -1
+                ftpdetails.watchedfiles.push filepath
+                statusView.addToStatusBar("Watching file: " + fileobj.getBaseName())
+                statusView.removeFromMessageBar()
+            else
+                ftpdetails.watchedfiles.splice ftpdetails.watchedfiles.indexOf(filepath), 1
+                statusView.addToStatusBar("Unwatching file: " + fileobj.getBaseName())
+                statusView.removeFromMessageBar()
 
             settingsFile.write JSON.stringify(ftpdetails);
+            @initdirectorywatching()
 
 
     contextMenuUploadFile: ->

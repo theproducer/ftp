@@ -5,7 +5,7 @@
 
   '.file':
       'Upload File': 'ftp:uploadfile'
-      'Watch File': 'ftp:watchfile'
+      'Watch/Unwatch File': 'ftp:watchfile'
 
 'menu': [
   {
