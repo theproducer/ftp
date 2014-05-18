@@ -1,9 +1,9 @@
 {
   "name": "ftp",
   "main": "./lib/ftp",
-  "version": "0.0.0",
-  "description": "A short description of your package",
-  "repository": "https://github.com/atom/ftp",
+  "version": "0.1.0",
+  "description": "A simple FTP client for Atom",
+  "repository": "https://github.com/theproducer/ftp",
   "license": "MIT",
   "engines": {
     "atom": ">0.50.0"
