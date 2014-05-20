@@ -56,16 +56,17 @@ class Ftp
         if settingsFile.exists()
             ftpdetails = CSON.readFileSync currentProject.getPath() + "/ftp.json"
 
-            watcher = Chokidar.watch ftpdetails.watchedfiles[0], {ignored: /[\/\\]\./, persistent: true}
+            if ftpdetails.watchedfiles.length > 0
+                watcher = Chokidar.watch ftpdetails.watchedfiles[0], {ignored: /[\/\\]\./, persistent: true}
 
-            i = 1
-            while i < ftpdetails.watchedfiles.length
-                watcher.add ftpdetails.watchedfiles[i]
-                i++
+                i = 1
+                while i < ftpdetails.watchedfiles.length
+                    watcher.add ftpdetails.watchedfiles[i]
+                    i++
 
-            watcher.on 'change', (path) =>
-                console.log "something has been changed!" + path
-                @uploadFileOnChange(path)
+                watcher.on 'change', (path) =>
+                    console.log "something has been changed!" + path
+                    @uploadFileOnChange(path)
 
     markfileaswatched: ->
         filepath = atom.workspaceView.find('.tree-view .selected')?.view()?.getPath?()
@@ -145,9 +146,11 @@ class Ftp
             patharray = patharray.split "/"
 
             console.log filetoupload.getParent().path
+            console.log filetoupload.getBaseName()
             console.log patharray
 
             streamData = fs.createReadStream(filepath)
+            console.log streamData
             streamData.pause();
 
             client.auth ftpdetails.username, ftpdetails.password, (err, res) ->
@@ -169,19 +172,20 @@ class Ftp
 
                         i++
 
-                    client.getPutSocket pathArrayString + "/" + filetoupload.getBaseName(), (err, socket) ->
-                        if err
+                    client.put filepath, pathArrayString + "/" + filetoupload.getBaseName(), (hadError) ->
+                        if hadError
                             console.error err
                             statusView.addToStatusBar("Upload Error")
                             statusView.removeFromMessageBar()
                             client.raw.quit()
                         else
-                            streamData.pipe(socket)
-                            streamData.resume()
                             client.raw.quit();
                             statusView.addToStatusBar("Upload Successful")
                             console.log "upload sucessful"
                             statusView.removeFromMessageBar()
+
+
+
 
 
     handleEvents: (editor) ->
@@ -195,9 +199,14 @@ class Ftp
             if settingsFile.exists()
                 ftpdetails = CSON.readFileSync currentProject.getPath() + "/ftp.json"
 
-                if ftpdetails.uploadonsave and ftpdetails.watchedfiles.indexOf(buffer.getPath()) is -1
-                    console.log "file saved!  Upload..."
-                    @uploadFile(buffer.getPath())
+                if ftpdetails.watchedfiles.length > 0
+                    if ftpdetails.uploadonsave and ftpdetails.watchedfiles.indexOf(buffer.getPath()) is -1
+                        console.log "file saved!  Upload..."
+                        @uploadFile(buffer.getPath())
+                else
+                    if ftpdetails.uploadonsave
+                        console.log "file saved!  Upload..."
+                        @uploadFile(buffer.getPath())
 
         @subscribe buffer, 'destroyed', =>
             @unsubscribe(buffer)

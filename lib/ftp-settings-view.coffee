@@ -6,7 +6,7 @@ module.exports =
 class FtpSettingsView extends View
     ftpdetails = null
     @content: ->
-        @div class: 'ftpsettings overlay from-top', =>
+        @div class: 'ftpsettings overlay from-top native-key-bindings', =>
             @h1 "Project FTP Settings"
 
             @div "Fill in the FTP details for the current project below.", class: "message"
@@ -75,6 +75,7 @@ class FtpSettingsView extends View
                 remotepath: ''
                 uploadonsave: false
                 uploadonchange: false
+                watchedfile: []
             settingsFile.write JSON.stringify(@ftpdetails);
 
         $(document).on('click', '#ftpsettings_save', ( =>
