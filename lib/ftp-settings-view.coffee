@@ -6,25 +6,25 @@ module.exports =
 class FtpSettingsView extends View
     ftpdetails = null
     @content: ->
-        @div class: 'ftpsettings overlay from-top native-key-bindings', =>
+        @div class: 'ftpsettings overlay from-top ', =>
             @h1 "Project FTP Settings"
 
             @div "Fill in the FTP details for the current project below.", class: "message"
 
             @div class: 'formrow editor-container native-key-bindings', =>
-                @input id:"server", type :'text', name: 'server', placeholder: 'server', class: 'editor editor-colors mini'
+                @input outlet: 'inputServer', id:"server", type :'text', name: 'server', placeholder: 'server', class: 'editor editor-colors mini native-key-bindings'
 
             @div class: 'formrow editor-container native-key-bindings', =>
-                @input id:"username", type :'text', name: 'username', placeholder: 'username', class: 'editor editor-colors mini'
+                @input outlet: 'inputUsername', id:"username", type :'text', name: 'username', placeholder: 'username', class: 'editor editor-colors mini native-key-bindings'
 
             @div class: 'formrow editor-container native-key-bindings', =>
-                @input id:"password", type :'password', name: 'password', placeholder: 'password', class: 'editor editor-colors mini'
+                @input outlet: 'inputPassword', id:"password", type :'password', name: 'password', placeholder: 'password', class: 'editor editor-colors mini native-key-bindings'
 
             @div class: 'formrow editor-container native-key-bindings', =>
-                @input id:"port", type :'text', name: 'port', placeholder: '21', class: 'editor editor-colors mini'
+                @input outlet: 'inputPort', id:"port", type :'text', name: 'port', placeholder: '21', class: 'editor editor-colors mini native-key-bindings'
 
             @div class: 'formrow editor-container native-key-bindings', =>
-                @input id:"remotepath", type :'text', name: 'remotepath', placeholder: 'remote path', class: 'editor editor-colors mini'
+                @input outlet: 'inputRemotepath', id:"remotepath", type :'text', name: 'remotepath', placeholder: 'remote path', class: 'editor editor-colors mini native-key-bindings'
 
             @div class: 'formrow editor-container native-key-bindings', =>
                 @input type: 'checkbox',  name: "uploadonsave", id:"uploadonsave"
