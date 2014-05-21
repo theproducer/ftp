@@ -75,7 +75,7 @@ class FtpSettingsView extends View
                 remotepath: ''
                 uploadonsave: false
                 uploadonchange: false
-                watchedfile: []
+                watchedfiles: []
             settingsFile.write JSON.stringify(@ftpdetails);
 
         $(document).on('click', '#ftpsettings_save', ( =>
